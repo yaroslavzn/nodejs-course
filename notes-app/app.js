@@ -1,4 +1,5 @@
-const fs = require("fs");
+const getNotes = require("./notes");
+const chalk = require("chalk");
 
-// fs.writeFileSync("notes.txt", "Hi, my name is Yaroslav!");
-fs.appendFileSync("notes.txt", "\nWhat is your name?");
+console.log(getNotes());
+console.log(chalk.blue.inverse("Info string"));
