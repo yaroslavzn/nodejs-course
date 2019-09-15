@@ -1,5 +1,13 @@
 const getNotes = require("./notes");
 const chalk = require("chalk");
 
-console.log(getNotes());
-console.log(chalk.blue.inverse("Info string"));
+const action = process.argv[2];
+
+switch (action) {
+  case "add":
+    console.log("Add the note!");
+    break;
+  case "remove":
+    console.log("Remove the note!");
+    break;
+}
