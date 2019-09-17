@@ -1,8 +1,5 @@
 const fs = require("fs");
-
-const getNotes = () => {
-  return "Your notes...";
-};
+const chalk = require("chalk");
 
 const addNote = (title, body) => {
   const notes = loadNotes();
@@ -16,15 +13,39 @@ const addNote = (title, body) => {
 
     notes.push(note);
 
-    saveNote(notes);
+    updateNotes(notes);
 
-    console.log("New note added!");
+    console.log(chalk.bgGreen.white("New note added!"));
   } else {
-    console.log("This note title is already in use!");
+    console.log(chalk.bgRed.white("This note title is already in use!"));
   }
 };
 
-const saveNote = notes => {
+const removeNote = title => {
+  const notes = loadNotes();
+
+  if (notes.length !== 0) {
+    const noteIdx = notes.findIndex(note => note.title === title);
+
+    if (noteIdx === -1) {
+      console.log(
+        chalk.bgRed.white(`Note with title "${title}" does not exist!`)
+      );
+    } else {
+      const updatedNotes = notes.filter(note => note.title !== title);
+
+      updateNotes(updatedNotes);
+
+      console.log(
+        chalk.bgGreen.white(`Your "${title}" note successfully removed!`)
+      );
+    }
+  } else {
+    console.log(chalk.bgBlue.white("You dont have any notes!"));
+  }
+};
+
+const updateNotes = notes => {
   const dataJSON = JSON.stringify(notes);
   fs.writeFileSync("notes.json", dataJSON);
 };
@@ -40,6 +61,6 @@ const loadNotes = () => {
 };
 
 module.exports = {
-  getNotes: getNotes,
-  addNote: addNote
+  addNote: addNote,
+  removeNote: removeNote
 };

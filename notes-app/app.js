@@ -29,9 +29,15 @@ const addNote = yargs.command(
 const removeNote = yargs.command(
   "remove",
   "Remove a note",
-  function(yargs) {},
+  {
+    title: {
+      type: "string",
+      demandOption: true,
+      describe: "Title of the note, which you want to delete"
+    }
+  },
   function(argv) {
-    console.log("Removing the note!");
+    notes.removeNote(argv.title);
   }
 ).argv;
 
@@ -41,7 +47,7 @@ const listNotes = yargs.command(
   "List notes",
   function(yargs) {},
   function(argv) {
-    console.log("Lis notes!");
+    console.log("List notes!");
   }
 ).argv;
 
