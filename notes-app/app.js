@@ -20,7 +20,7 @@ const addNote = yargs.command(
       describe: "Note description"
     }
   },
-  function(argv) {
+  argv => {
     notes.addNote(argv.title, argv.body);
   }
 ).argv;
@@ -29,28 +29,35 @@ const addNote = yargs.command(
 const removeNote = yargs.command(
   "remove",
   "Remove a note",
-  function(yargs) {},
-  function(argv) {
-    console.log("Removing the note!");
+  {
+    title: {
+      type: "string",
+      demandOption: true,
+      describe: "Title of the note, which you want to delete"
+    }
+  },
+  argv => {
+    notes.removeNote(argv.title);
   }
 ).argv;
 
 // List notes command
-const listNotes = yargs.command(
-  "list",
-  "List notes",
-  function(yargs) {},
-  function(argv) {
-    console.log("Lis notes!");
-  }
-).argv;
+const listNotes = yargs.command("list", "List notes", {}, () => {
+  notes.listNotes();
+}).argv;
 
 // Read a note
 const readNote = yargs.command(
   "read",
   "Read the  note",
-  function(yargs) {},
-  function(argv) {
-    console.log("Reading the note!");
+  {
+    title: {
+      demandOption: true,
+      type: "string",
+      describe: "Title of the note, which you want to read."
+    }
+  },
+  argv => {
+    notes.readNote(argv.title);
   }
 ).argv;
