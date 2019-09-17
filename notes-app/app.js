@@ -47,6 +47,17 @@ const listNotes = yargs.command("list", "List notes", {}, () => {
 }).argv;
 
 // Read a note
-const readNote = yargs.command("read", "Read the  note", {}, argv => {
-  console.log("Reading the note!");
-}).argv;
+const readNote = yargs.command(
+  "read",
+  "Read the  note",
+  {
+    title: {
+      demandOption: true,
+      type: "string",
+      describe: "Title of the note, which you want to read."
+    }
+  },
+  argv => {
+    notes.readNote(argv.title);
+  }
+).argv;

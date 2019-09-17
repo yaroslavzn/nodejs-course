@@ -59,6 +59,23 @@ const listNotes = () => {
   }
 };
 
+const readNote = title => {
+  const notes = loadNotes();
+
+  if (notes.length !== 0) {
+    const selectedNote = notes.find(note => note.title === title);
+
+    if (!selectedNote) {
+      console.log(chalk.bgRed.white("This note does not exist!"));
+    } else {
+      console.log(chalk.bgBlue.white(selectedNote.title + ":"));
+      console.log(selectedNote.body);
+    }
+  } else {
+    console.log(chalk.bgBlue.white("You dont have any notes!"));
+  }
+};
+
 const updateNotes = notes => {
   const dataJSON = JSON.stringify(notes);
   fs.writeFileSync("notes.json", dataJSON);
@@ -77,5 +94,6 @@ const loadNotes = () => {
 module.exports = {
   addNote: addNote,
   removeNote: removeNote,
-  listNotes: listNotes
+  listNotes: listNotes,
+  readNote: readNote
 };
