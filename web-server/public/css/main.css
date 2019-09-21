@@ -1,0 +1,12 @@
+html {
+  font-family: sans-serif;
+}
+
+h1 {
+  color: lightgrey;
+}
+
+img {
+  display: block;
+  max-width: 250px;
+}
