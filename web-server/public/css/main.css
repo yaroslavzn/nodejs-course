@@ -1,12 +1,111 @@
 html {
-  font-family: sans-serif;
+  height: 100%;
+}
+
+body {
+  font-family: "Ubuntu", sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
 }
 
 h1 {
-  color: lightgrey;
+  font-size: 50px;
 }
 
 img {
   display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.portrait {
   max-width: 250px;
+}
+
+.mx-auto {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-list__item:not(:last-of-type) {
+  margin-right: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #333;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.container {
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.error-message {
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+}
+
+.header {
+  padding-top: 15px;
+  margin-bottom: 25px;
+}
+
+input {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  border: 1px solid rgb(195, 195, 195);
+  padding: 10px;
+  margin-right: 15px;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(195, 195, 195, 0.35);
+}
+
+button {
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 16px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: rgb(103, 103, 103);
+  border: none;
+  color: #fff;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(195, 195, 195, 0.35);
 }

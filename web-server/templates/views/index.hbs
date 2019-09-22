@@ -1,0 +1,21 @@
+{{>head}}
+
+<body>
+  <div class="wrapper">
+    <div class="content">
+      {{>header}}
+      <div class="container">
+        <form action="/weather" method="GET" id="search-form">
+          <input type="text" placeholder="Location" name="address">
+          <button>Search</button>
+        </form>
+
+        <p id="message-1"></p>
+        <p id="message-2"></p>
+      </div>
+    </div>
+    {{>footer}}
+  </div>
+</body>
+
+</html>
