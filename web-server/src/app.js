@@ -54,7 +54,7 @@ app.get("/weather", (req, res) => {
   const address = req.query.address;
   if (!address) {
     return res.send({
-      error: "You mast provide and address term!"
+      error: "You must provide an address term!"
     });
   }
 
@@ -79,7 +79,11 @@ app.get("/weather", (req, res) => {
         forecast: `${forecastData.daily.data[0].summary} It is currently ${
           forecastData.currently.temperature
         } degrees out. There is a ${forecastData.currently.precipProbability *
-          100}% chance of rain.`,
+          100}% chance of rain. Min temperature today is - ${
+          forecastData.daily.data[0].temperatureMin
+        } degrees. Max temperature today is - ${
+          forecastData.daily.data[0].temperatureMax
+        } degrees.`,
         location
       });
     });
