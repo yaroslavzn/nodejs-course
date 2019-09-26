@@ -1,5 +1,4 @@
-const mongodb = require("mongodb");
-const MongoClient = mongodb.MongoClient;
+const { MongoClient, ObjectID } = require("mongodb");
 
 const connectionURL = "mongodb://127.0.0.1:27017";
 const database = "task-manager";
@@ -13,32 +12,26 @@ MongoClient.connect(
     }
 
     const db = client.db(database);
+    let count;
 
-    // db.collection("users").insertOne({
-    //   name: "Yaroslav",
-    //   age: 26
-    // });
-    db.collection("tasks").insertMany(
-      [
-        {
-          description: "Go to the  work.",
-          completed: false
-        },
-        {
-          description: "Drink a cup of tea",
-          completed: true
-        },
-        {
-          description: "Wash the body",
-          completed: true
-        }
-      ],
-      (error, result) => {
-        if (error) {
-          return console.log("Unable to insert tasks!");
+    db.collection("tasks")
+      .find({ completed: false })
+      .toArray((err, tasks) => {
+        if (err) {
+          return console.log("Unable to count documents.");
         }
 
-        console.log(result.ops);
+        console.log(tasks);
+      });
+
+    db.collection("tasks").findOne(
+      { _id: new ObjectID("5d8c4bf9a06549355d325b88") },
+      (err, task) => {
+        if (err) {
+          return console.log("Unable to fetch task.");
+        }
+
+        console.log(task);
       }
     );
   }
