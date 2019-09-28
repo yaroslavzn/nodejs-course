@@ -14,10 +14,10 @@ MongoClient.connect(
     const db = client.db(database);
 
     db.collection("tasks")
-      .updateMany({ completed: false }, { $set: { completed: true } })
-      .then(res => {
-        console.log(res);
+      .deleteOne({
+        _id: new ObjectID("5d8c4bf9a06549355d325b86")
       })
+      .then(res => console.log(res))
       .catch(err => console.log(err));
   }
 );
