@@ -12,27 +12,12 @@ MongoClient.connect(
     }
 
     const db = client.db(database);
-    let count;
 
     db.collection("tasks")
-      .find({ completed: false })
-      .toArray((err, tasks) => {
-        if (err) {
-          return console.log("Unable to count documents.");
-        }
-
-        console.log(tasks);
-      });
-
-    db.collection("tasks").findOne(
-      { _id: new ObjectID("5d8c4bf9a06549355d325b88") },
-      (err, task) => {
-        if (err) {
-          return console.log("Unable to fetch task.");
-        }
-
-        console.log(task);
-      }
-    );
+      .updateMany({ completed: false }, { $set: { completed: true } })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => console.log(err));
   }
 );
