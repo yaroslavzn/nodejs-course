@@ -51,10 +51,12 @@ const userScheme = new mongoose.Schema({
 });
 
 // Generate auth token
-userScheme.methods.generateAuthToken = function() {
+userScheme.methods.generateAuthToken = async function() {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "taskmanagerapp");
   user.tokens = user.tokens.concat({ token });
+
+  await user.save();
 
   return token;
 };
