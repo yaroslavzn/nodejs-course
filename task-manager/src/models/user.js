@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userScheme = new mongoose.Schema({
   name: {
@@ -38,8 +39,25 @@ const userScheme = new mongoose.Schema({
         throw new Error("Password should not contains a 'password' word!");
       }
     }
-  }
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 });
+
+// Generate auth token
+userScheme.methods.generateAuthToken = function() {
+  const user = this;
+  const token = jwt.sign({ _id: user._id.toString() }, "taskmanagerapp");
+  user.tokens = user.tokens.concat({ token });
+
+  return token;
+};
 
 // Find user for login
 userScheme.statics.findByCredentials = async (email, password) => {
