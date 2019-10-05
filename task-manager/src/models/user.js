@@ -2,52 +2,64 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Task = require("./task");
 
-const userScheme = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  age: {
-    type: Number,
-    default: 0,
-    validate(value) {
-      if (value < 0) {
-        throw new Error("Age must be a positive number!");
+const userScheme = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    age: {
+      type: Number,
+      default: 0,
+      validate(value) {
+        if (value < 0) {
+          throw new Error("Age must be a positive number!");
+        }
       }
-    }
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Email is invalid!");
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is invalid!");
+        }
       }
-    }
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-    validate(value) {
-      if (value.includes("password")) {
-        throw new Error("Password should not contains a 'password' word!");
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+      validate(value) {
+        if (value.includes("password")) {
+          throw new Error("Password should not contains a 'password' word!");
+        }
       }
-    }
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true
+        }
       }
-    }
-  ]
+    ]
+  },
+  {
+    timestamps: true
+  }
+);
+
+userScheme.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "owner"
 });
 
 // Generate auth token
@@ -59,6 +71,16 @@ userScheme.methods.generateAuthToken = async function() {
   await user.save();
 
   return token;
+};
+
+userScheme.methods.toJSON = function() {
+  const user = this;
+  const userObj = user.toObject();
+
+  delete userObj.password;
+  delete userObj.tokens;
+
+  return userObj;
 };
 
 // Find user for login
@@ -83,6 +105,14 @@ userScheme.pre("save", async function(next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 8);
   }
+
+  next();
+});
+
+userScheme.pre("remove", async function(next) {
+  const user = this;
+
+  await Task.deleteMany({ owner: user._id });
 
   next();
 });
