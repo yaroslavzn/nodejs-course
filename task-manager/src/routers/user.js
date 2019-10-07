@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const sharp = require("sharp");
+const { sendWelcomeEmail, sendCancelationEmail } = require("../mail/account");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
 
@@ -11,6 +12,7 @@ router.post("/users", async (req, res) => {
 
   try {
     await user.save();
+    sendWelcomeEmail(user.email, user.name);
     const token = await user.generateAuthToken();
 
     res.status(201).send({ user, token });
@@ -101,7 +103,8 @@ router.patch("/users/me", auth, async (req, res) => {
 
 router.delete("/users/me", auth, async (req, res) => {
   try {
-    req.user.remove();
+    await req.user.remove();
+    sendCancelationEmail(req.user.email, req.user.name);
     res.send(req.user);
   } catch (e) {
     res.status(500).send(e);
