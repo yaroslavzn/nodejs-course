@@ -21,16 +21,18 @@ io.on("connection", (socket) => {
 
     socket.broadcast.emit("message", "New user enter to the chat room!");
 
-    socket.on("sendMessage", (message) => {
+    socket.on("sendMessage", (message, callback) => {
         io.emit("message", message);
+        callback();
     });
 
     socket.on("disconnect", () => {
         io.emit("message", "User has left the chat room!");
     });
 
-    socket.on("sendLocation", (data) => {
+    socket.on("sendLocation", (data, callback) => {
         socket.broadcast.emit("message", `https://google.com/maps?q=${data.lat},${data.long}`);
+        callback("Location shared!");
     });
 
 });
