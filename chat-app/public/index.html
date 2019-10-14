@@ -9,5 +9,19 @@
 </head>
 <body>
     <h1>Chat app</h1>
+
+    <form id="chat-form">
+        <textarea name="message" id="chat-message"></textarea>
+        <div>
+            <button>Send</button>
+        </div>
+    </form>
+
+    <div>
+        <button type="button" id="location-btn">Send location</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
 </body>
 </html>
