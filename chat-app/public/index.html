@@ -5,27 +5,53 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chat app</title>
+    <title>Chat App</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" href="/img/favicon.png">
 </head>
 <body>
-    <h1>Chat app</h1>
+    <div class="chat">
+        <div class="chat__sidebar">
 
-    <div id="messages"></div>
-
-    <form id="chat-form">
-        <textarea name="message" id="chat-message"></textarea>
-        <div>
-            <button id="send-message">Send</button>
         </div>
-    </form>
 
-    <div>
-        <button type="button" id="location-btn">Send location</button>
+        <div class="chat__main">
+            <div id="messages" class="chat__messages"></div>
+
+            <div class="compose">
+                <form id="chat-form">
+                    <input name="message" id="chat-message">
+                    <button id="send-message">Send</button>
+                </form>
+
+                <div>
+                    <button type="button" id="location-btn">Send location</button>
+                </div>
+            </div>
+
+
+
+        </div>
     </div>
 
+
     <script type="text/html" id="message-template">
-        <div>
+        <div class="message">
+            <p>
+                <span class="message__name">Some user name</span>
+                <span class="message__meta">{{createdAt}}</span>
+            </p>
             <p>{{message}}</p>
+        </div>
+    </script>
+
+    <script type="text/html" id="location-message-template">
+        <div class="message">
+            <p>
+                <span class="message__name">Some user name</span>
+                <span class="message__meta">{{createdAt}}</span>
+            </p>
+            <a href="{{url}}" target="_blank">My current location</a>
         </div>
     </script>
 

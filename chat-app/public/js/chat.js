@@ -4,6 +4,7 @@ const messageBlock = form.querySelector("#chat-message");
 const sendMessageButton = form.querySelector("#send-message");
 const locationBtn = document.querySelector("#location-btn");
 const messageTemplate = document.querySelector("#message-template");
+const locationMessageTemplate = document.querySelector("#location-message-template");
 const messages = document.querySelector("#messages");
 
 form.addEventListener("submit", (e) => {
@@ -40,7 +41,17 @@ locationBtn.addEventListener("click", () => {
 
 socket.on("message", (data) => {
     const markup = Mustache.render(messageTemplate.innerHTML, {
-        message: data
+        message: data.text,
+        createdAt: moment(data.createdAt).format("kk:mm:ss")
+    });
+
+    messages.insertAdjacentHTML("beforeend", markup);
+});
+
+socket.on("locationMessage", (data) => {
+    const markup = Mustache.render(locationMessageTemplate.innerHTML, {
+        url: data.url,
+        createdAt: moment(data.createdAt).format("kk:mm:ss")
     });
 
     messages.insertAdjacentHTML("beforeend", markup);

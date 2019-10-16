@@ -2,6 +2,7 @@ const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
+const {generateMessage, generateLocationMessage} = require("./utils/message");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -17,21 +18,21 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-    socket.emit("message", "Welcome!");
+    socket.emit("message", generateMessage("Welcome!"));
 
-    socket.broadcast.emit("message", "New user enter to the chat room!");
+    socket.broadcast.emit("message", generateMessage("New user enter to the chat room!"));
 
     socket.on("sendMessage", (message, callback) => {
-        io.emit("message", message);
+        io.emit("message", generateMessage(message));
         callback();
     });
 
     socket.on("disconnect", () => {
-        io.emit("message", "User has left the chat room!");
+        io.emit("message", generateMessage("User has left the chat room!"));
     });
 
     socket.on("sendLocation", (data, callback) => {
-        socket.broadcast.emit("message", `https://google.com/maps?q=${data.lat},${data.long}`);
+        socket.emit("locationMessage", generateLocationMessage(`https://google.com/maps?q=${data.lat},${data.long}`));
         callback("Location shared!");
     });
 
