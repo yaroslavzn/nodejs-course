@@ -3,6 +3,7 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const {generateMessage, generateLocationMessage} = require("./utils/message");
+const {addUser, removeUser, getUser, getUsersInRoom} = require("./utils/users");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,24 +19,60 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-    socket.emit("message", generateMessage("Welcome!"));
+    socket.on("join", ({room, username}, callback) => {
+        const {error, user} = addUser({
+           id: socket.id,
+           username,
+           room
+        });
 
-    socket.broadcast.emit("message", generateMessage("New user enter to the chat room!"));
+        if (error) {
+            return callback(error);
+        }
+
+        socket.join(user.room);
+
+        socket.emit("message", generateMessage("Admin", "Welcome!"));
+        io.to(user.room).emit("roomData", {
+           room: user.room,
+           users: getUsersInRoom(user.room)
+        });
+
+        socket.broadcast.to(user.room).emit("message", generateMessage("Admin", `${user.name} has joined!`));
+    });
 
     socket.on("sendMessage", (message, callback) => {
-        io.emit("message", generateMessage(message));
+        const {user, error} = getUser(socket.id);
+
+        if (error) {
+            return callback(error);
+        }
+
+        io.to(user.room).emit("message", generateMessage(user.name, message));
         callback();
     });
 
     socket.on("disconnect", () => {
-        io.emit("message", generateMessage("User has left the chat room!"));
+        const user = removeUser(socket.id);
+
+        if (user) {
+            io.to(user.room).emit("message", generateMessage("Admin", `${user.name} has left the chat room!`));
+            io.to(user.room).emit("roomData", {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            });
+        }
     });
 
     socket.on("sendLocation", (data, callback) => {
-        socket.emit("locationMessage", generateLocationMessage(`https://google.com/maps?q=${data.lat},${data.long}`));
+        const {user, error} = getUser(socket.id);
+
+        if (error) {
+            return callback(error);
+        }
+        socket.to(user.room).emit("locationMessage", generateLocationMessage(user.name,`https://google.com/maps?q=${data.lat},${data.long}`));
         callback("Location shared!");
     });
-
 });
 
 server.listen(port, () => {
